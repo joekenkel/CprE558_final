@@ -3,9 +3,9 @@
 
 void reset_control(task* rst_task){
   rst_task->current_state = 1;
-  rst_task->compute = contol_compute;
-  rst_task->deadline += contol_period;
-  rst_task->laxity = contol_period - contol_compute;
+  rst_task->compute = control_compute;
+  rst_task->deadline += control_period;
+  rst_task->laxity = control_period - control_compute;
 }
 void reset_sonar0(sonar_task* rst_task){
   rst_task->task_info.current_state = 1;
@@ -28,9 +28,17 @@ void reset_sonar2(sonar_task* rst_task){
   rst_task->task_info.laxity = sonar0_period - sonar0_compute;
 }
 
+void reset_direction(direction_info* rst_task){
+  rst_task->x = 0;
+  rst_task->y = 0;
+  rst_task->angle = 0;
+  rst_task->turn_left = false;
+  rst_task->turn_right = false;
+}
+
 void sel_task(task* t_control,sonar_task* t_sonar0,
              sonar_task* t_sonar1,sonar_task* t_sonar2,
-             int task_idx){
+             direction_info* dir_info, int task_idx){
               
   // make it easier to type
   int cnt_num = t_control->deadline;
@@ -41,10 +49,12 @@ void sel_task(task* t_control,sonar_task* t_sonar0,
   // on a tie t_cnt -> sonar0 -> sonar1 -> sonar2
   if (cnt_num <= sonar0_num && cnt_num <= sonar1_num && 
       cnt_num <= sonar2_num && 
-      t_control->current_state < contol_compute){ 
+      t_control->current_state < control_compute){ 
         //Control has the closest deadline
     Serial.println("control is running");
-    run_cnt(t_control);
+    run_cnt(t_control,dir_info,
+              t_sonar0->distance,t_sonar1->distance,t_sonar2->distance);
+              
   }else if(sonar0_num <= sonar1_num && sonar0_num <= sonar1_num &&
             t_sonar0->task_info.current_state < sonar0_compute){ 
               // sonar0 has the closest deadline

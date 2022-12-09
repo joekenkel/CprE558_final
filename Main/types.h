@@ -3,10 +3,12 @@
 
 #define time_interal 1    // 1 ms
 
-#define contol_compute 3  // count
-#define contol_period 8   // count
-#define contol_m 3        // count
-#define contol_k 4        // count
+#define control_compute 3  // count
+#define control_period 8   // count
+#define control_m 3        // count
+#define control_k 4        // count
+#define left_wheel_pin 5   // pin number
+#define right_wheel_pin 6  // pin number
 
 #define sonar0_compute 2  // count
 #define sonar0_period 12  // count
@@ -44,6 +46,14 @@ struct sonar_task{
   
   long duration;  // mS
   int distance;   // cm
+};
+
+struct direction_info{
+  int x;
+  int y;
+  int angle;
+  bool turn_left;
+  bool turn_right;
 };
 
 #endif

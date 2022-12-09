@@ -5,9 +5,13 @@
 #include <stdio.h>
 
 // User functions
-void run_cnt(task* my_task);
-void run_ping(short trig_pin, short echo_pin, sonar_task* my_task);
+void run_cnt(task* my_task,direction_info* dir_info,
+              int sonar0,int sonar1,int sonar2);
+void process_response(task* my_task,direction_info* dir_info,
+              int sonar0,int sonar1,int sonar2);
 
+              
+void run_ping(short trig_pin, short echo_pin, sonar_task* my_task);
 void ping_state(short trig_pin, short echo_pin, long* duration);
 
 // helper functions

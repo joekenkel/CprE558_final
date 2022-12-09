@@ -6,6 +6,7 @@ task t_control;
 sonar_task t_sonar0;
 sonar_task t_sonar1;
 sonar_task t_sonar2;
+direction_info dir_info;
 
 unsigned long nxt_task_time;
 int task_idx;
@@ -29,8 +30,13 @@ void setup() {
   pinMode(sonar2_trig, OUTPUT); // Sets the trigPin as an OUTPUT
   pinMode(sonar2_echo, INPUT); // Sets the echoPin as an INPUT
 
+  //wheels
   t_control.taskId = 2;
   reset_control(&t_control);
+  pinMode(left_wheel_pin, OUTPUT);  // Sets the left_wheel_pin as an OUTPUT
+  pinMode(right_wheel_pin, OUTPUT); // Sets the right_wheel_pin as an OUTPUT
+  
+  reset_direction(&dir_info);
   
   Serial.begin(9600); // Starts the serial communication
   Serial.println("Debug Print 1");
@@ -43,7 +49,7 @@ void loop() {
   nxt_task_time = micros() + time_interal*1000;
 
   calculate_manditory(&t_control,&t_sonar0,&t_sonar1,&t_sonar2,task_idx);
-  sel_task(&t_control,&t_sonar0,&t_sonar1,&t_sonar2,task_idx);
+  sel_task(&t_control,&t_sonar0,&t_sonar1,&t_sonar2,&dir_info,task_idx);
   task_idx += 1;
   
   while(micros() < nxt_task_time){}
