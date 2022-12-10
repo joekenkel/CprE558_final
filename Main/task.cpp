@@ -1,4 +1,7 @@
 #include "task.h"
+#include "control_func.h"
+#include "sonar_func.h"
+
 
 void int_control(task* int_task){
   int_task->taskId = 69;

@@ -2,7 +2,6 @@
 #define TASK_H
 #include "Arduino.h"
 #include "types.h"
-#include "sonar_func.h"
 
 void int_control(task* rst_task);
 void int_sonar0(sonar_task* rst_task);

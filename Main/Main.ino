@@ -1,4 +1,5 @@
 #include "sonar_func.h"
+#include "control_func.h"
 #include "task.h"
 #include "types.h"
 #include <string.h>

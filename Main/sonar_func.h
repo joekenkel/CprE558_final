@@ -5,17 +5,14 @@
 #include <stdio.h>
 
 // User functions
-void run_cnt(task* my_task,direction_info* dir_info,
-              int sonar0,int sonar1,int sonar2);
-void process_response(task* my_task,direction_info* dir_info,
-              int sonar0,int sonar1,int sonar2);
-
-              
 void run_ping(short trig_pin, short echo_pin, sonar_task* my_task);
+
+// State functions
 void ping_state(short trig_pin, short echo_pin, long* duration);
+void compute_distance(long* duration,int* distance);
 
 // helper functions
 void trigger_sonar(short trig_pin);
-void compute_distance(long* duration,int* distance);
+
 
 #endif

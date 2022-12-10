@@ -6,6 +6,7 @@
 #define int_max 32767
 
 #define time_interal 10    // ms
+#define turn_time 5000     // us
 
 #define control_compute 3  // count
 #define control_period 8   // count
