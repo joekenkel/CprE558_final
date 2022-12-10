@@ -1,6 +1,7 @@
 #include "sonar_func.h"
 #include "task.h"
 #include "types.h"
+#include <string.h>
 
 task t_control;
 sonar_task t_sonar0;
@@ -13,30 +14,26 @@ int task_idx;
 
 void setup() {
   //Straight Forward
-  t_sonar0.task_info.taskId = 0;
-  reset_sonar0(&t_sonar0);
+  int_sonar0(&t_sonar0);
   pinMode(sonar0_trig, OUTPUT); // Sets the trigPin as an OUTPUT
   pinMode(sonar0_echo, INPUT); // Sets the echoPin as an INPUT
 
   //Left
-  t_sonar0.task_info.taskId = 1;
-  reset_sonar1(&t_sonar1);
+  int_sonar1(&t_sonar1);
   pinMode(sonar1_trig, OUTPUT); // Sets the trigPin as an OUTPUT
   pinMode(sonar1_echo, INPUT); // Sets the echoPin as an INPUT
 
   //Right
-  t_sonar0.task_info.taskId = 2;
-  reset_sonar2(&t_sonar2);
+  int_sonar2(&t_sonar2);
   pinMode(sonar2_trig, OUTPUT); // Sets the trigPin as an OUTPUT
   pinMode(sonar2_echo, INPUT); // Sets the echoPin as an INPUT
 
   //wheels
-  t_control.taskId = 2;
-  reset_control(&t_control);
+  int_control(&t_control);
   pinMode(left_wheel_pin, OUTPUT);  // Sets the left_wheel_pin as an OUTPUT
   pinMode(right_wheel_pin, OUTPUT); // Sets the right_wheel_pin as an OUTPUT
   
-  reset_direction(&dir_info);
+  int_direction(&dir_info);
   
   Serial.begin(9600); // Starts the serial communication
   Serial.println("Debug Print 1");
@@ -46,12 +43,26 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  nxt_task_time = micros() + time_interal*1000;
+  char str_temp[100];
+  sprintf(str_temp, "Starting Task %d\n", task_idx);
+  Serial.print(str_temp);
+  
+  unsigned long start_time = micros();
+  nxt_task_time = start_time + time_interal*1000;
 
   calculate_manditory(&t_control,&t_sonar0,&t_sonar1,&t_sonar2,task_idx);
-  sel_task(&t_control,&t_sonar0,&t_sonar1,&t_sonar2,&dir_info,task_idx);
+  sel_task(&t_control,&t_sonar0,&t_sonar1,&t_sonar2,&dir_info);
   task_idx += 1;
-  
+
+  unsigned long cmp_time = micros();
   while(micros() < nxt_task_time){}
+  update_tasks(&t_control,&t_sonar0,&t_sonar1,&t_sonar2,task_idx);
   
+  sprintf(str_temp, "Laxity = %lu uS\n", (cmp_time - start_time));
+  int i;
+  for(i = strlen(str_temp)+1;i >= strlen(str_temp)-7;i--){
+    str_temp[i+1]=str_temp[i];
+  }
+  str_temp[i] = ',';
+  Serial.print(str_temp);
 }

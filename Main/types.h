@@ -1,21 +1,25 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-#define time_interal 1    // 1 ms
+#define debug_verbos 0
+#define debug 0
+#define int_max 32767
+
+#define time_interal 10    // ms
 
 #define control_compute 3  // count
 #define control_period 8   // count
 #define control_m 3        // count
 #define control_k 4        // count
-#define left_wheel_pin 5   // pin number
-#define right_wheel_pin 6  // pin number
+#define left_wheel_pin 8   // pin number
+#define right_wheel_pin 9  // pin number
 
 #define sonar0_compute 2  // count
 #define sonar0_period 12  // count
 #define sonar0_m 3        // count
 #define sonar0_k 4        // count
-#define sonar0_trig 2     // pin number
-#define sonar0_echo 3     // pin number
+#define sonar0_trig 1     // pin number
+#define sonar0_echo 0     // pin number
 
 #define sonar1_compute 2  // count
 #define sonar1_period 12  // count
