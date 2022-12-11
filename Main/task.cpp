@@ -55,8 +55,6 @@ void int_sonar2(sonar_task* int_task){
 }
 
 void int_direction(direction_info* int_task){
-  int_task->x = 0;
-  int_task->y = 0;
   int_task->angle = 0;
   int_task->turn_left = false;
   int_task->turn_right = false;
