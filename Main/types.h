@@ -1,5 +1,6 @@
 #ifndef TYPES_H
 #define TYPES_H
+#include "Arduino.h"
 
 #define debug_verbos 0
 #define debug 0
@@ -44,6 +45,10 @@ struct task{
   short laxity;     // task count
   
   bool mandatory; // 1 = mandatory, 0 = optional
+  
+  //TODO turn to class so we can vary length
+  byte task_histoy[20];
+  short task_sum;
 };
 
 struct sonar_task{             

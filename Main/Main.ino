@@ -11,7 +11,7 @@ sonar_task t_sonar2;
 direction_info dir_info;
 
 unsigned long nxt_task_time;
-int task_idx;
+long task_idx;
 
 void setup() {
   //Straight Forward
@@ -51,7 +51,6 @@ void loop() {
   unsigned long start_time = micros();
   nxt_task_time = start_time + time_interal*1000;
 
-  calculate_manditory(&t_control,&t_sonar0,&t_sonar1,&t_sonar2,task_idx);
   sel_task(&t_control,&t_sonar0,&t_sonar1,&t_sonar2,&dir_info);
   task_idx += 1;
 

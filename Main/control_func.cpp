@@ -22,7 +22,6 @@ void run_cnt(task* my_task,direction_info* dir_info,
       Serial.println("(ERROR) control is in the default");
       break;
   }
-  
 }
 
 void process_response(task* my_task,direction_info* dir_info,
