@@ -29,6 +29,8 @@ void process_response(task* my_task,direction_info* dir_info,
   bool fwd_hit = false;
   bool left_hit = false;
   bool right_hit = false;
+  dir_info->turn_left = false;
+  dir_info->turn_right = false;
   
   //forward
   if(sonar0_dist > 5 && sonar0_dist < 100){
@@ -43,13 +45,17 @@ void process_response(task* my_task,direction_info* dir_info,
     right_hit = true;
   }
 
-#if debug_verbos
+#if debug_wheels
   char str_temp[80];
+  sprintf(str_temp, "Sonar0 dist = %d, Sonar1 dist = %d, Sonar2 _dist = %d\n",
+          sonar0_dist, sonar1_dist, sonar2_dist);
+  Serial.print(str_temp);
   sprintf(str_temp, "Starting process_response\nfwd was a %s, left was a %s, right was a %s\n",
           fwd_hit ? "hit" : "miss",
           left_hit ? "hit" : "miss",
           right_hit ? "hit" : "miss");
   Serial.print(str_temp);
+  
 #endif
 
   //Moving Right
@@ -94,7 +100,7 @@ void process_response(task* my_task,direction_info* dir_info,
     }
   }
 
-#if debug_verbos
+#if debug_wheels
   sprintf(str_temp, "Turn Left = %s, Turn Right = %s, Dir = %d\n",
           dir_info->turn_left ? "Yes" : "No",
           dir_info->turn_right ? "Yes" : "No",
@@ -117,6 +123,7 @@ void update_wheels(task* my_task,direction_info* dir_info){
       turn_right();
       delayMicroseconds(turn_time);
       go_forward();
+      return;
   }
   
   if(dir_info->turn_left){
@@ -126,7 +133,10 @@ void update_wheels(task* my_task,direction_info* dir_info){
       turn_left();
       delayMicroseconds(turn_time);
       go_forward();
+      return;
   }
+
+  go_forward();
 }
 
 void stop_wheels(){

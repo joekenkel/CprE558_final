@@ -25,4 +25,6 @@ void update_tasks(task* t_control,sonar_task* t_sonar0,
              sonar_task* t_sonar1,sonar_task* t_sonar2,
              long task_idx);
 
+void print_sonar(sonar_task t_sonar);
+void print_task(task t_control);
 #endif

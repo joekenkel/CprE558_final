@@ -31,9 +31,9 @@ void int_sonar0(sonar_task* int_task){
 void int_sonar1(sonar_task* int_task){
   int_task->task_info.taskId = 1;
   int_task->task_info.current_state = 1;
-  int_task->task_info.compute = sonar0_compute;
-  int_task->task_info.deadline += sonar0_period;
-  int_task->task_info.laxity = sonar0_period - sonar0_compute;
+  int_task->task_info.compute = sonar1_compute;
+  int_task->task_info.deadline += sonar1_period;
+  int_task->task_info.laxity = sonar1_period - sonar1_compute;
     
   //int as no misses
   for(int i = 0; i < sonar1_k; i++){
@@ -44,9 +44,9 @@ void int_sonar1(sonar_task* int_task){
 void int_sonar2(sonar_task* int_task){
   int_task->task_info.taskId = 2;
   int_task->task_info.current_state = 1;
-  int_task->task_info.compute = sonar0_compute;
-  int_task->task_info.deadline += sonar0_period;
-  int_task->task_info.laxity = sonar0_period - sonar0_compute;
+  int_task->task_info.compute = sonar2_compute;
+  int_task->task_info.deadline += sonar2_period;
+  int_task->task_info.laxity = sonar2_period - sonar2_compute;
     
   //int as no misses
   for(int i = 0; i < sonar2_k; i++){
@@ -133,11 +133,16 @@ void sel_task(task* t_control,sonar_task* t_sonar0,
   int sonar2_num = sonar2_check ? t_sonar2->task_info.deadline : int_max;
 
 #if debug_verbos
-  char temp_str[50];
+  print_task(*t_control);
+  print_sonar(*t_sonar0);
+  print_sonar(*t_sonar1);
+  print_sonar(*t_sonar2);
+
+  char temp_str[100];
   sprintf(temp_str, "control check = %s, cnt_num = %d, Manditory = %s\n", 
           cnt_check ? "true" : "false", cnt_num, t_control->mandatory ? "true" : "false");
   Serial.print(temp_str);
-  sprintf(tecnt_checkmp_str, "Sonar 0 check = %s, sonar0_num = %d, Manditory = %s\n",
+  sprintf(temp_str, "Sonar 0 check = %s, sonar0_num = %d, Manditory = %s\n",
           sonar0_check ? "true" : "false", sonar0_num, t_sonar0->task_info.mandatory ? "true" : "false");
   Serial.print(temp_str);
   sprintf(temp_str, "Sonar 1 check = %s, sonar1_num = %d, Manditory = %s\n",
@@ -155,7 +160,7 @@ void sel_task(task* t_control,sonar_task* t_sonar0,
   
   for(int i = 0; i < 2; i++){
     if(i == 1 || 
-        ~(control_pass || sonar0_pass || sonar1_pass || sonar2_pass)){
+        !(control_pass || sonar0_pass || sonar1_pass || sonar2_pass)){
       //None of the manditory tasks ran or there are not manditory tasks.  
       control_pass = true;
       sonar0_pass = true;
@@ -172,6 +177,7 @@ void sel_task(task* t_control,sonar_task* t_sonar0,
 #endif
       run_cnt(t_control,dir_info,
                 t_sonar0->distance,t_sonar1->distance,t_sonar2->distance);
+      break;
                 
     }else if(sonar0_num <= sonar1_num && sonar0_num <= sonar1_num &&
               sonar0_check && sonar0_pass){ 
@@ -180,16 +186,19 @@ void sel_task(task* t_control,sonar_task* t_sonar0,
   Serial.println("Sonar0 is running");
 #endif
       run_ping(sonar0_trig, sonar0_echo, t_sonar0);
+      break;
     }else if(sonar1_num <= sonar2_num && sonar1_check && sonar1_pass){ // sonar1 has the closest deadline
 #if debug
   Serial.println("Sonar1 is running");
 #endif
       run_ping(sonar1_trig, sonar1_echo, t_sonar1);
+      break;
     }else if(sonar2_check & sonar2_pass){// sonar2 has the closest deadline
 #if debug
   Serial.println("Sonar2 is running");
 #endif
       run_ping(sonar2_trig, sonar2_echo, t_sonar2);
+      break;
     }
   }
 }
@@ -203,4 +212,28 @@ void update_tasks(task* t_control,sonar_task* t_sonar0,
   update_task(&(t_sonar1->task_info),task_idx,sonar1_period,sonar0_k,sonar1_k-sonar1_m);
   update_task(&(t_sonar2->task_info),task_idx,sonar2_period,sonar0_k,sonar2_k-sonar2_m); 
 
+}
+
+void print_task(task t_control){
+    char temp_str[100];
+    sprintf(temp_str,"Task id = %d\nState = %d\nCompute = %d\nDeadline = %d\nLaxity = %d\n%s\n",
+    t_control.taskId,
+    t_control.current_state,
+    t_control.compute,
+    t_control.deadline,
+    t_control.laxity,
+    t_control.mandatory ? "Mandatory" : "Optional");
+
+  //TODO turn to class so we can vary length
+//  byte task_histoy[20];
+//  short task_sum;
+
+    Serial.print(temp_str);
+  
+}
+void print_sonar(sonar_task t_sonar){
+  print_task(t_sonar.task_info);
+  char temp_str[50];
+  sprintf(temp_str,"Distance = %d cm\n",t_sonar.distance);
+  Serial.print(temp_str);
 }

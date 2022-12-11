@@ -44,20 +44,24 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+#if debug
   char str_temp[100];
-  sprintf(str_temp, "Starting Task %d\n", task_idx);
+  sprintf(str_temp, "\n\nStarting Task %d\n", task_idx);
   Serial.print(str_temp);
-  
+#endif 
+
   unsigned long start_time = micros();
   nxt_task_time = start_time + time_interal*1000;
 
   sel_task(&t_control,&t_sonar0,&t_sonar1,&t_sonar2,&dir_info);
   task_idx += 1;
-
+#if debug
   unsigned long cmp_time = micros();
+#endif
   while(micros() < nxt_task_time){}
   update_tasks(&t_control,&t_sonar0,&t_sonar1,&t_sonar2,task_idx);
-  
+
+#if debug
   sprintf(str_temp, "Laxity = %lu uS\n", (cmp_time - start_time));
   int i;
   for(i = strlen(str_temp)+1;i >= strlen(str_temp)-7;i--){
@@ -65,4 +69,6 @@ void loop() {
   }
   str_temp[i] = ',';
   Serial.print(str_temp);
+  delay(1000);
+#endif
 }
