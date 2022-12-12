@@ -57,42 +57,50 @@ void process_response(task* my_task,direction_info* dir_info,
   //Moving forward
   if(fwd_hit){
     //To the right of center
-    if(dir_info->angle > 0 && !(dir_info->turn_left)){
-      //If right of the center, default going left
+//    if(dir_info->angle > 0 && !(dir_info->turn_left)){
+//      //If right of the center, default going left
       if(left_hit){ 
         dir_info->turn_right = true;
         dir_info->turn_left = false;
         dir_info->angle += 1;
-      }else{
-        dir_info->turn_left = true;
-        dir_info->turn_right = false;
-        dir_info->angle -= 1;
+        return;
       }
-      return;
-    }else{
-      //If left of the center, default going right
+//      }else{
+//        dir_info->turn_left = true;
+//        dir_info->turn_right = false;
+//        dir_info->angle -= 1;
+//      }
+//      
+//    }else{
+//      //If left of the center, default going right
       if(right_hit){
         dir_info->turn_left = true;
         dir_info->turn_right = false;
         dir_info->angle -= 1;
-      }else{
+        return;
+      }
+//      }else{
+//        dir_info->turn_right = true;
+//        dir_info->turn_left = false;
+//        dir_info->angle += 1;
+//      }
         dir_info->turn_right = true;
         dir_info->turn_left = false;
         dir_info->angle += 1;
-      }
-      return;
-    }
+        return;
+//      return;
+//    }
   }
 
   if(sonar1_dist > 5 && sonar1_dist < 25){ 
-    dir_info->turn_right = true;
-    dir_info->turn_left = false;
+    dir_info->turn_right = false;
+    dir_info->turn_left = true;
     dir_info->angle += 1;
     return;
   }
   if(sonar2_dist > 5 && sonar2_dist < 25){
-    dir_info->turn_left = true;
-    dir_info->turn_right = false;
+    dir_info->turn_left = false;
+    dir_info->turn_right = true;
     dir_info->angle -= 1;
     return;
   }

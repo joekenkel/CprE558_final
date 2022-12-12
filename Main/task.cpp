@@ -121,13 +121,13 @@ void sel_task(task* t_control,sonar_task* t_sonar0,
              direction_info* dir_info){
               
   // make it easier to type
-  bool cnt_check = t_control->laxity >= 0 && t_control->current_state <= control_compute;
+  bool cnt_check = t_control->laxity >= 0 && t_control->current_state <= control_compute && t_control->mandatory ;
   int cnt_num = cnt_check ? t_control->deadline : int_max;
-  bool sonar0_check = t_sonar0->task_info.laxity >= 0 && t_sonar0->task_info.current_state <= sonar0_compute;
+  bool sonar0_check = t_sonar0->task_info.laxity >= 0 && t_sonar0->task_info.current_state <= sonar0_compute && t_sonar0->task_info.mandatory;
   int sonar0_num = sonar0_check ? t_sonar0->task_info.deadline : int_max;
-  bool sonar1_check = t_sonar1->task_info.laxity >= 0 && t_sonar1->task_info.current_state <= sonar1_compute;
+  bool sonar1_check = t_sonar1->task_info.laxity >= 0 && t_sonar1->task_info.current_state <= sonar1_compute && t_sonar1->task_info.mandatory;
   int sonar1_num = sonar1_check ? t_sonar1->task_info.deadline : int_max;
-  bool sonar2_check = t_sonar2->task_info.laxity >= 0 && t_sonar2->task_info.current_state <= sonar2_compute;
+  bool sonar2_check = t_sonar2->task_info.laxity >= 0 && t_sonar2->task_info.current_state <= sonar2_compute && t_sonar2->task_info.mandatory;
   int sonar2_num = sonar2_check ? t_sonar2->task_info.deadline : int_max;
 
 #if debug_verbos
@@ -164,6 +164,14 @@ void sel_task(task* t_control,sonar_task* t_sonar0,
       sonar0_pass = true;
       sonar1_pass = true;
       sonar2_pass = true;
+      bool cnt_check = t_control->laxity >= 0 && t_control->current_state <= control_compute && t_control->mandatory ;
+      int cnt_num = cnt_check ? t_control->deadline : int_max;
+      bool sonar0_check = t_sonar0->task_info.laxity >= 0 && t_sonar0->task_info.current_state <= sonar0_compute && t_sonar0->task_info.mandatory;
+      int sonar0_num = sonar0_check ? t_sonar0->task_info.deadline : int_max;
+      bool sonar1_check = t_sonar1->task_info.laxity >= 0 && t_sonar1->task_info.current_state <= sonar1_compute && t_sonar1->task_info.mandatory;
+      int sonar1_num = sonar1_check ? t_sonar1->task_info.deadline : int_max;
+      bool sonar2_check = t_sonar2->task_info.laxity >= 0 && t_sonar2->task_info.current_state <= sonar2_compute && t_sonar2->task_info.mandatory;
+      int sonar2_num = sonar2_check ? t_sonar2->task_info.deadline : int_max;
     }
         
     // on a tie t_cnt -> sonar0 -> sonar1 -> sonar2
