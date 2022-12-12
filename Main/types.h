@@ -5,7 +5,7 @@
 #define debug 0  
 #define debug_verbos 0
 #define debug_time (debug | 0)
-#define debug_wheels (debug_verbos | 1)
+#define debug_wheels (debug_verbos | 0)
 #define int_max 32767
 
 #define time_interal 10    // ms
