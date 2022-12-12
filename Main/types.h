@@ -2,9 +2,10 @@
 #define TYPES_H
 #include "Arduino.h"
 
-#define debug 0
+#define debug 0  
 #define debug_verbos 0
-#define debug_wheels (debug_verbos | 0)
+#define debug_time (debug | 0)
+#define debug_wheels (debug_verbos | 1)
 #define int_max 32767
 
 #define time_interal 10    // ms
@@ -55,14 +56,12 @@ struct task{
 struct sonar_task{             
   task task_info;    //basic task information
   
-  long duration;  // mS
-  int distance;   // cm
+  long duration;    // mS
+  int distance;     // cm
 };
 
 struct direction_info{
-  int x;
-  int y;
-  int angle;
+  int angle;        //Arbitary Number
   bool turn_left;
   bool turn_right;
 };

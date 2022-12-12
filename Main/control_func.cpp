@@ -29,19 +29,17 @@ void process_response(task* my_task,direction_info* dir_info,
   bool fwd_hit = false;
   bool left_hit = false;
   bool right_hit = false;
-  dir_info->turn_left = false;
-  dir_info->turn_right = false;
   
   //forward
-  if(sonar0_dist > 5 && sonar0_dist < 100){
+  if(sonar0_dist > 5 && sonar0_dist < 50){
     fwd_hit = true;
   }
   //left
-  if(sonar1_dist > 5 && sonar1_dist < 100){
+  if(sonar1_dist > 5 && sonar1_dist < 50){
     left_hit = true;
   }
   //right
-  if(sonar2_dist > 5 && sonar2_dist < 100){
+  if(sonar2_dist > 5 && sonar2_dist < 40){
     right_hit = true;
   }
 
@@ -55,50 +53,59 @@ void process_response(task* my_task,direction_info* dir_info,
           left_hit ? "hit" : "miss",
           right_hit ? "hit" : "miss");
   Serial.print(str_temp);
-  
 #endif
-
-  //Moving Right
-  if(dir_info->angle == 45){
-    if(left_hit && fwd_hit){
-      dir_info->turn_right = true;
-      return;
-    }else if(left_hit){
-      return;
-    }else{
-      dir_info->turn_left = true;
-    }
-  }
-  //Moving Left
-  if(dir_info->angle == -45){
-    if(right_hit && fwd_hit){
-      dir_info->turn_left = true;
-      return;
-    }else if(right_hit){
-      return;
-    }else{
-      dir_info->turn_right = true;
-    }
-  }
-
   //Moving forward
   if(fwd_hit){
-    if(dir_info->y > 0){
-      //If right of the center, default going left
+    //To the right of center
+//    if(dir_info->angle > 0 && !(dir_info->turn_left)){
+//      //If right of the center, default going left
       if(left_hit){ 
         dir_info->turn_right = true;
-      }else{
-        dir_info->turn_left = true;
+        dir_info->turn_left = false;
+        dir_info->angle += 1;
+        return;
       }
-    }else{
-      //If left of the center, default going right
+//      }else{
+//        dir_info->turn_left = true;
+//        dir_info->turn_right = false;
+//        dir_info->angle -= 1;
+//      }
+//      
+//    }else{
+//      //If left of the center, default going right
       if(right_hit){
         dir_info->turn_left = true;
-      }else{
-        dir_info->turn_right = true;
+        dir_info->turn_right = false;
+        dir_info->angle -= 1;
+        return;
       }
-    }
+//      }else{
+//        dir_info->turn_right = true;
+//        dir_info->turn_left = false;
+//        dir_info->angle += 1;
+//      }
+        dir_info->turn_right = true;
+        dir_info->turn_left = false;
+        dir_info->angle += 1;
+        return;
+//      return;
+//    }
   }
+
+  if(sonar1_dist > 5 && sonar1_dist < 25){ 
+    dir_info->turn_right = false;
+    dir_info->turn_left = true;
+    dir_info->angle += 1;
+    return;
+  }
+  if(sonar2_dist > 5 && sonar2_dist < 25){
+    dir_info->turn_left = false;
+    dir_info->turn_right = true;
+    dir_info->angle -= 1;
+    return;
+  }
+  dir_info->turn_right = false;
+  dir_info->turn_left = false;
 
 #if debug_wheels
   sprintf(str_temp, "Turn Left = %s, Turn Right = %s, Dir = %d\n",
@@ -121,8 +128,6 @@ void update_wheels(task* my_task,direction_info* dir_info){
   Serial.print("Turning Right\n");
 #endif
       turn_right();
-      delayMicroseconds(turn_time);
-      go_forward();
       return;
   }
   
@@ -131,8 +136,6 @@ void update_wheels(task* my_task,direction_info* dir_info){
   Serial.print("Turning Left\n");
 #endif
       turn_left();
-      delayMicroseconds(turn_time);
-      go_forward();
       return;
   }
 
